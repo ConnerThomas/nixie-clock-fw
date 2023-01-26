@@ -184,9 +184,7 @@ void DisplayClass::setDigit(uint8_t digit, uint8_t val)
   case 0:
     data &= ~(0x3FFull);
     if (val < 10)
-    {
       data |= (1ull << (val + 0));
-    }
     break;
   case 1:
     data &= ~(0x3FFull << 10);
@@ -254,15 +252,18 @@ void DisplayClass::setNumber(uint32_t num, bool leadingZeros)
     setDigits(digits);
   }
 }
+
 void DisplayClass::setDots(bool leftLower, bool leftUpper, bool rightLower, bool rightUpper)
 {
   data &= ~((1ull << 30) | (1ull << 31) | (1ull << 62) | (1ull << 63));
   data |= ((uint64_t)leftLower << 30) | ((uint64_t)leftUpper << 31) | ((uint64_t)rightLower << 62) | ((uint64_t)rightUpper << 63);
 }
+
 void DisplayClass::setDots(bool left, bool right)
 {
   setDots(left, left, right, right);
 }
+
 void DisplayClass::setDots(bool on)
 {
   setDots(on, on, on, on);

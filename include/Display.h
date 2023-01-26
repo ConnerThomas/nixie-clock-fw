@@ -18,7 +18,7 @@ namespace NixieClock
     SINGLE1,
     SINGLE2,
     ALL
-    
+
   };
 
   class DisplayClass

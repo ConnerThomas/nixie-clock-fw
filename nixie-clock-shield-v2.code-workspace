@@ -3,10 +3,6 @@
 		{
 			"name": "nixie-clock-shield-v2",
 			"path": "."
-		},
-		{
-			"name": "Firmware",
-			"path": "../../Firmware/NixeTubesShieldNCS314/Firmware"
 		}
 	],
 	"settings": {}

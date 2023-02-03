@@ -31,7 +31,7 @@ void gps_sync();
 void setup()
 {
 
-  Serial.begin(115200); // lowered this from 230400, probably doesn't need to be that high
+  Serial.begin(230400); // lowered this from 230400, probably doesn't need to be that high
 
   Serial.write("Conner's Fork of H3xCat's NixieClock Firmware (" NCS_STR ")\r\n");
 
@@ -48,11 +48,14 @@ void setup()
   Display.setACP(DisplayACP::ALL, 60000, 500);
 
   TimeKeeper.setDst(DST::USA);
-  TimeKeeper.setOffset(-8);
+  TimeKeeper.setOffset(0);
 
   //alarmMusic.begin(PIN_BUZZER);
   //alarmMusic.load((char *)"Auld L S:d=4,o=6,b=101:g5,c,8c,c,e,d,8c,d,8e,8d,c,8c,e,g,2a,a,g,8e,e,c,d,8c,d,8e,8d,c,8a5,a5,g5,2c");
   //  alarmMusic.play();
+
+  Display.wipeAnimate();
+
 }
 
 //// LOOP ////////////////////////////////////////////////////////////////////////////
@@ -131,16 +134,18 @@ void display_update()
   {
     // Display date when any of the buttons are pressed down
 
-    Display.setNumber(((unsigned long)timeinfo_local.Month) * 10000 + timeinfo_local.Day * 100 + (((unsigned long)timeinfo_local.Year + 1970) % 100));
+    Display.setNumber(((unsigned long)timeinfo_local.Month) * 10000 + timeinfo_local.Day * 100 + (((unsigned long)timeinfo_local.Year) % 100));
     Display.setDots(true, false, true, false);
 
-    Display.setLed(255, 100, 0);
+    Display.setLed(100, 100, 0);
   }
   else
   {
     // Display the time
 
-    Display.setNumber(((unsigned long)timeinfo_local.Hour) * 10000 + timeinfo_local.Minute * 100 + timeinfo_local.Second);
+    // Not sure what the 1970 thing was doing, removed since the date cannot be set from the clock
+    // Added % 12 to hours to display in 12 hours format
+    Display.setNumber(((unsigned long)timeinfo_local.Hour % 12) * 10000 + timeinfo_local.Minute * 100 + timeinfo_local.Second);
     Display.setLed(0, 0, 0);
     if (timeinfo_local.Second & 0x01)
     {

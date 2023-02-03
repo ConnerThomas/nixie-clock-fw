@@ -298,3 +298,63 @@ void DisplayClass::setLed(uint8_t red, uint8_t green, uint8_t blue)
   leds.show();
 #endif
 }
+
+void DisplayClass::wipeAnimate()
+{
+  int delay = 20; // controls the speed of the animated wipe
+
+  union 
+    {
+    uint64_t w_var;
+    uint8_t b_var[8];
+    } u_data;
+
+  u_data.w_var = 0x3;
+
+  static SPISettings spiSettings = SPISettings(4e6, MSBFIRST, SPI_MODE2);
+
+  digitalWrite(PIN_HV5122_OE, LOW);
+
+  SPI.beginTransaction(spiSettings);
+  
+  for (int k = 0; k < 58; k++)
+  {
+    // Send the entire 64 bits of data in 8 bit chunks
+    for (int i = 7; i >= 0; --i)
+    {
+      SPI.transfer(u_data.b_var[i]);
+    }
+
+    // Shift the active element over by one
+    u_data.w_var = u_data.w_var << 1;
+
+    // if we reach a colon, skip it
+    if (u_data.b_var[3] == 0x60)
+    {
+      u_data.w_var = u_data.w_var << 3;
+    }
+
+    // Zero the colons by ANDing the data with an inverse mask:
+    // 00 1111111111 1111111111 1111111111 00 1111111111 1111111111 1111111111
+    // 11000000 00000000 00000000 00000000 11000000 00000000 00000000 00000000
+    //u_data.w_var = u_data.w_var & ~(0b11 << 62) & ~(0b11 << 30);
+    //u_data.w_var &= 0x3FFFFFFF3FFFFFFF; // this should be the same thing
+    digitalWrite(PIN_HV5122_OE, HIGH);
+    _delay_ms(delay);
+    digitalWrite(PIN_HV5122_OE, LOW);
+  }
+
+  // clear the display
+
+  u_data.w_var = 0ull;
+
+  for (int i = 7; i >= 0; --i)
+  {
+    SPI.transfer(u_data.b_var[i]);
+  }
+
+  SPI.endTransaction();
+
+  digitalWrite(PIN_HV5122_OE, HIGH);
+
+}

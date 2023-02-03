@@ -1,5 +1,5 @@
-#ifndef RTTTL_H
-#define RTTTL_H
+#ifndef _RTTTL_H
+#define _RTTTL_H
 
 #include <Tone.h>
 

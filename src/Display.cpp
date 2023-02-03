@@ -276,6 +276,12 @@ void DisplayClass::setACP(DisplayACP mode, uint32_t cycleInterval, uint32_t digi
   acpDigitInterval = digitInterval;
 }
 
+/**
+ * @brief Sets the color of nixie tube backlight LEDs
+ * @param red the intensity of the red LED (0-255)
+ * @param green the intensity of the green LED (0-255)
+ * @param blue the intensity of the blue LED (0-255)
+*/
 void DisplayClass::setLed(uint8_t red, uint8_t green, uint8_t blue)
 {
 #ifdef NCS314

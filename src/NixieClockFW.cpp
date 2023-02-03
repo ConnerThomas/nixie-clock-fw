@@ -7,7 +7,7 @@
 #include "Menu.h"
 #include "Display.h"
 #include "TimeKeeper.h"
-#include "RTTTL.h"
+//#include "RTTTL.h"
 
 #if _CONFIG_GPS_ENABLED
 #include "GPSTime.h"
@@ -19,7 +19,7 @@ using NixieClock::Display;
 using NixieClock::DisplayACP;
 using NixieClock::Menu;
 
-RTTTL alarmMusic;
+// RTTTL alarmMusic;
 
 void display_update();
 
@@ -50,8 +50,8 @@ void setup()
   TimeKeeper.setDst(DST::USA);
   TimeKeeper.setOffset(-8);
 
-  alarmMusic.begin(PIN_BUZZER);
-  alarmMusic.load((char *)"Auld L S:d=4,o=6,b=101:g5,c,8c,c,e,d,8c,d,8e,8d,c,8c,e,g,2a,a,g,8e,e,c,d,8c,d,8e,8d,c,8a5,a5,g5,2c");
+  //alarmMusic.begin(PIN_BUZZER);
+  //alarmMusic.load((char *)"Auld L S:d=4,o=6,b=101:g5,c,8c,c,e,d,8c,d,8e,8d,c,8c,e,g,2a,a,g,8e,e,c,d,8c,d,8e,8d,c,8a5,a5,g5,2c");
   //  alarmMusic.play();
 }
 
@@ -60,7 +60,7 @@ void loop()
 {
   Display.update();
   Menu.update();
-  alarmMusic.update();
+  //alarmMusic.update();
 
   if (Menu.buttonState(BUTTON_UP))
   {

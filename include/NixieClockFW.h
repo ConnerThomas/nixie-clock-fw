@@ -1,4 +1,7 @@
-#pragma once
+#ifndef _NIXIECLOCKFW_H
+#define _NIXIECLOCKFW_H
+// #pragma once
+// Switched to include guards
 
 #include "Arduino.h"
 
@@ -28,4 +31,6 @@
 // These are not supported on non-mega boards
 #define _CONFIG_GPS_ENABLED 0
 #define _CONFIG_IR_ENABLED 0
+#endif
+
 #endif

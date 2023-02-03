@@ -1,5 +1,5 @@
-#ifndef TIME_KEEPER_H
-#define TIME_KEEPER_H
+#ifndef _TIME_KEEPER_H
+#define _TIME_KEEPER_H
 
 #include "NixieClockFW.h"
 

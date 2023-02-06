@@ -145,6 +145,9 @@ void DisplayClass::acp()
       ++acpCounter;
     }
     break;
+
+  case DisplayACP::NONE:
+    break;
   }
 
   data = oldData;
@@ -297,6 +300,11 @@ void DisplayClass::setLed(uint8_t red, uint8_t green, uint8_t blue)
   }
   leds.show();
 #endif
+}
+
+void turnOffTubes()
+{
+  digitalWrite(PIN_HV5122_OE, LOW);
 }
 
 void DisplayClass::wipeAnimate()

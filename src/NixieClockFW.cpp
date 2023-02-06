@@ -27,6 +27,8 @@ void display_update();
 void gps_sync();
 #endif
 
+bool SLEEP;
+
 //// SETUP ///////////////////////////////////////////////////////////////////////////
 void setup()
 {
@@ -35,8 +37,11 @@ void setup()
 
   Serial.write("Conner's Fork of H3xCat's NixieClock Firmware (" NCS_STR ")\r\n");
 
+  SLEEP = false;
+
   Display.begin();
   TimeKeeper.begin();
+
 
 #if _CONFIG_GPS_ENABLED
   GPSTime.begin(false, &Serial1);
@@ -130,32 +135,44 @@ void display_update()
   TimeElements timeinfo_local = {};
   TimeKeeper.getLocalTime(timeinfo_local);
 
+  SLEEP = (timeinfo_local.Hour >= SLEEP_START) | (timeinfo_local.Hour < SLEEP_END);
+
+  /** TODO:
+   * if we're not in sleep, display time
+   * if we are in sleep, only blink colons and turn off ACP
+   * 
+  */
+
   if (Menu.buttonState(BUTTON_UP) || Menu.buttonState(BUTTON_DOWN) || Menu.buttonState(BUTTON_MODE))
   {
     // Display date when any of the buttons are pressed down
-
     Display.setNumber(((unsigned long)timeinfo_local.Month) * 10000 + timeinfo_local.Day * 100 + (((unsigned long)timeinfo_local.Year) % 100));
     Display.setDots(true, false, true, false);
 
     Display.setLed(100, 100, 0);
   }
+  
+  if(!SLEEP)
+  {
+    // Not sure what the 1970 thing was doing, removed since the date cannot be set from the clock
+    // Added % 12 to hours to display in 12 hours format, but now 12AM = 00 on the clock
+    Display.setNumber(((unsigned long)timeinfo_local.Hour) * 10000 + timeinfo_local.Minute * 100 + timeinfo_local.Second);
+    Display.setLed(0, 0, 0);
+  }
   else
   {
-    // Display the time
-
-    // Not sure what the 1970 thing was doing, removed since the date cannot be set from the clock
-    // Added % 12 to hours to display in 12 hours format
-    Display.setNumber(((unsigned long)timeinfo_local.Hour % 12) * 10000 + timeinfo_local.Minute * 100 + timeinfo_local.Second);
-    Display.setLed(0, 0, 0);
-    if (timeinfo_local.Second & 0x01)
-    {
-      Display.setDots(true);
-      // Display.setLed(255,0,0);
-    }
-    else
-    {
-      Display.setDots(false);
-      // Display.setLed(0,0,0);
-    }
+    digitalWrite(PIN_HV5122_OE, LOW);
   }
+
+  if (timeinfo_local.Second & 0x01)
+  {
+    Display.setDots(true);
+    // Display.setLed(255,0,0);
+  }
+  else
+  {
+    Display.setDots(false);
+    // Display.setLed(0,0,0);
+  }
+
 }

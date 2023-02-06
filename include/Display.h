@@ -6,6 +6,8 @@
 #include <SPI.h>
 #include "NixieClockFW.h"
 
+#include "Config.h"
+
 #ifdef NCS318
 #include <Adafruit_NeoPixel.h>
 #endif
@@ -51,6 +53,7 @@ namespace NixieClock
     static void setDots(bool on);
     static void setACP(DisplayACP mode, uint32_t cycleInterval = 60000, uint32_t digitInterval = 100);
     static void setLed(uint8_t red, uint8_t green, uint8_t blue);
+    static void turnOffTubes();
     static void wipeAnimate();
   };
 
